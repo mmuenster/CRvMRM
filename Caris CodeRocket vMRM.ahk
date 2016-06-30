@@ -461,7 +461,10 @@ NewCaseNum=%csbPrefix%%csbYear%-%csbCaseNum%
 	CloseWinSURGEModalWindow("WinSURGE - Final Diagnosis:","","Close")
 	;CloseWinSURGEModalWindow("WinSURGE Case Lookup","","Cancel")
 	IfWinNotExist, WinSURGE Case Lookup
+		{
+		WinActivate, WinSURGE
 		Send, !2
+	}
 	SetTimer, UnblockInput, 5000
 	BlockInput, On
 	OpenCase(NewCaseNum)
