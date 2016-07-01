@@ -1152,7 +1152,11 @@ return
 
 SendEmail:
 {
-		StringSplit, parts, CurrentCaseNumber, -
+		WinGetTitle, x, WinSURGE, Approve
+		StringReplace, x, x, Case, |, All
+		StringSplit, y, x, |, %A_Space%
+		StringSplit, z, y2, %A_Space%, %A_space%
+		StringSplit, parts, z1, -
 		np2 := LTrim(parts2, "0")
 		ccn=%parts1%-%np2%
 	
