@@ -373,7 +373,7 @@ EnterSignoutPasswordandApprove()
 			SplashTextOff
 			ControlGetText, t1, %ApprovalPasswordControl%, WinSURGE E-signout [
 			WinSurgeSignoutPassword=%t1%
-			IniWrite, %WinSurgeSignoutPassword%, %A_MyDocuments%\CarisCodeRocket.ini, Window Positions, WinSurgeSignoutPassword
+			IniWrite, %WinSurgeSignoutPassword%, %A_ScriptDir%\CarisCodeRocket.ini, Window Positions, WinSurgeSignoutPassword
 			Continue
 		}
 	If WinExist("WinSURGE", "abcdefgABCDEFG 1234567890","E-signout","")    
@@ -434,7 +434,7 @@ Open4SignOut(obj)
  * 				ToolTip   ;Removes the tooltip
  * 			}
  * 
- * 		IniWrite, %EsignoutTextBox%, %A_MyDocuments%\CarisCodeRocket.ini, Window Positions, EsignoutTextBox
+ * 		IniWrite, %EsignoutTextBox%, %A_ScriptDir%\CarisCodeRocket.ini, Window Positions, EsignoutTextBox
  * 		}
  * 
  * 	Loop,   ;Enters the case number to the E-signout window

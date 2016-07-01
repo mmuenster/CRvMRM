@@ -12,7 +12,7 @@ SetTitleMatchMode 1
 CoordMode, Mouse, Relative
 ComObjError(false)
 
-IfExist, %A_MyDocuments%\CarisCodeRocket.ini
+IfExist, %A_ScriptDir%\CarisCodeRocket.ini
 	ReadIniValues()
 Else
 	FirstTimeSetup()
@@ -68,6 +68,12 @@ Menu, MyMenuBar, Add, &Settings, :SettingsMenu
 Menu, MyMenuBar, Add, &Help, :HelpMenu
 Gui, Menu, MyMenuBar
 
+Gui, 5:Font, S14, Arial
+Gui, 5:Add, Edit, r25 w650 VScroll vClinicalHistory,
+Gui, 5:+AlwaysOnTop
+
+
+
 Gui, 2:Font, S12, Verdana
 Gui, 2:Add, Text, x18 vDocPreferenceLabel, TestNameXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 Gui, 2:Font, S8, Verdana
@@ -85,7 +91,6 @@ If (HomeLabCasePrefix="C")
 	GuiControl, 4:Choose, Loc, Boston
 else if (HomeLabCasePrefix="D")
 	GuiControl, 4:Choose, Loc, Irving
-
 Gui, 4:Add, DropDownList, AltSubmit vEmailType w500, Patient Double Blind Error|Need Previous Biopsy Report|Clinical Note and Photos|Critical Result Call|Pull Bottles and Blocks
 GuiControl, 4:Choose, EmailType, 1
 Gui, 4:Add, Text, ,Comments
@@ -183,20 +188,14 @@ If UseSendMethod
 Else
 	Menu, SettingsMenu, UnCheck, Use Send Method
 
-StringLeft, x, A_ScriptDir, 1
-if x=C
-	x=S
-Run, %x%:\CodeRocket\bin\EP\Autohotkey.exe %x%:\CodeRocket\bin\EP\DermpathExtendedPhrases.ahk, ,UseErrorLevel , epid
+Run, Autohotkey.exe DermpathExtendedPhrases.ahk, ,UseErrorLevel , epid
 If ErrorLevel
-	MsgBox, 4112, Connectivity Error, Your connection to the S:\CodeRocket directory is not present.  Usually`, restarting your computer will correct this.  You can use the CodeRocket program but will have no extended phrase capabilities.
+	MsgBox, 4112, Could not load DermpathExtendedPhrases!
 
-
-IfExist, %A_MyDocuments%\PersonalExtendedPhrases.ahk
-	{
-	Run, %x%:\CodeRocket\bin\EP\Autohotkey.exe "%A_MyDocuments%\PersonalExtendedPhrases.ahk", ,UseErrorLevel , ppid	
-	If ErrorLevel
-		Msgbox, There was an error loading your personal extended phrases file.
-	}
+Run, Autohotkey.exe PersonalExtendedPhrases.ahk, ,UseErrorLevel , ppid	
+If ErrorLevel
+	Msgbox, There was an error loading your personal extended phrases file.
+	
 return
 }
 
@@ -207,7 +206,7 @@ SpeakPatientName:
 		SpeakEnabled := 0
 	Else
 		SpeakEnabled := 1
-	IniWrite, %SpeakEnabled%, %A_MyDocuments%\CarisCodeRocket.ini, Window Positions, SpeakEnabled
+	IniWrite, %SpeakEnabled%, %A_ScriptDir%\CarisCodeRocket.ini, Window Positions, SpeakEnabled
 Return
 }
 
@@ -218,7 +217,7 @@ UseSendMethod:
 		UseSendMethod := 0
 	Else
 		UseSendMethod := 1
-	IniWrite, %UseSendMethod%, %A_MyDocuments%\CarisCodeRocket.ini, Window Positions, UseSendMethod
+	IniWrite, %UseSendMethod%, %A_ScriptDir%\CarisCodeRocket.ini, Window Positions, UseSendMethod
 
 Return
 }
@@ -262,7 +261,7 @@ ModeManual:
 	Hotkey, ^k, Off
 	Hotkey, ^!p, Off
 	OpMode=M
-	IniWrite, %OpMode%, %A_MyDocuments%\CarisCodeRocket.ini, Window Positions, OpMode
+	IniWrite, %OpMode%, %A_ScriptDir%\CarisCodeRocket.ini, Window Positions, OpMode
 	Return
 }
 
@@ -273,7 +272,7 @@ ModeBasicAutomatic:
 			Msgbox, 4, , You have not setup Caris CodeRocket for automated operation.  Do you want to go through setup to enable automation?
 			IfMsgBox, Yes
 				{
-					FileDelete, %A_MyDocuments%\CarisCodeRocket.ini
+					FileDelete, %A_ScriptDir%\CarisCodeRocket.ini
 					Reload
 					Return
 				}
@@ -301,7 +300,7 @@ ModeBasicAutomatic:
 	GuiControl, Enable, CaseLoaderLbl
 	GuiControl, Text, CaseScanBox, 
 	OpMode=B
-	IniWrite, %OpMode%, %A_MyDocuments%\CarisCodeRocket.ini, Window Positions, OpMode
+	IniWrite, %OpMode%, %A_ScriptDir%\CarisCodeRocket.ini, Window Positions, OpMode
 Return
 }
 
@@ -312,7 +311,7 @@ ModeDeluxeAutomatic:
 			Msgbox, 4, , You have not setup Caris CodeRocket for automated operation.  Do you want to go through setup to enable automation?
 			IfMsgBox, Yes
 				{
-					FileDelete, %A_MyDocuments%\CarisCodeRocket.ini
+					FileDelete, %A_ScriptDir%\CarisCodeRocket.ini
 					Reload
 					Return
 				}
@@ -338,7 +337,7 @@ ModeDeluxeAutomatic:
 	Menu, SettingsMenu, Enable, Speak Patient Name
 
 
-	IniWrite, %OpMode%, %A_MyDocuments%\CarisCodeRocket.ini, Window Positions, OpMode
+	IniWrite, %OpMode%, %A_ScriptDir%\CarisCodeRocket.ini, Window Positions, OpMode
 	lastWinSURGEtitle=  ;Forces Case update to occur.
 	Gosub, WinSurgeCaseDataUpdater
 Return
@@ -448,6 +447,49 @@ if CaseNumberProblem
 
 NewCaseNum=%csbPrefix%%csbYear%-%csbCaseNum%
 
+	x := get_filled_case_number(NewCaseNum)
+	s := "select s.dx, s.gross, s.numberofspecimenparts, s.custom03, s.clin, p.name, s.clindata, pt.name, s.Computed_PATIENTAGE, p.proficiencylog from specimen s, physician p, patient pt where s.patient = pt.id and s.clin=p.id and computed_numberfilled='" . x . "'"
+	WinSurgeQuery(s)
+	CurrentCaseNumber := x
+	finaldiagnosistext := Result_1
+	grossdescriptiontext := Result_2
+	numberofvials := Result_3
+	OrderedCPTCodes := Result_4
+	ClientWinSurgeId := Result_5
+	ClientName := Result_6		
+	ClinicalData := Result_7
+	PatientName := Result_8
+	StringSplit, j, Result_9, .
+	PatientAge := j1
+
+	StringReplace, preferences, Result_10, ***, `n, All
+
+	STringReplace, finaldiagnosistext, finaldiagnosistext, `%`%P`%`%%A_Space%, `%`%P`%`%`n, All
+	STringReplace, finaldiagnosistext, finaldiagnosistext, %A_Space%B., `n`nB., All
+	STringReplace, finaldiagnosistext, finaldiagnosistext, %A_Space%Comment:, `n`nComment:, All
+	
+	STringReplace, ClinicalData, ClinicalData, %A_Space%B., `nB., All
+	STringReplace, ClinicalData, ClinicalData, %A_Space%C., `nC., All
+	STringReplace, ClinicalData, ClinicalData, %A_Space%D., `nD., All
+	STringReplace, ClinicalData, ClinicalData, %A_Space%E., `nE., All
+	STringReplace, ClinicalData, ClinicalData, %A_Space%F., `nF., All
+	STringReplace, ClinicalData, ClinicalData, %A_Space%G., `nG., All
+	STringReplace, ClinicalData, ClinicalData, %A_Space%H., `nH., All
+	STringReplace, ClinicalData, ClinicalData, %A_Space%I., `nI., All
+
+	STringReplace, grossdescriptiontext, grossdescriptiontext, %A_Space%B., `nB., All
+	STringReplace, grossdescriptiontext, grossdescriptiontext, %A_Space%C., `nC., All
+	STringReplace, grossdescriptiontext, grossdescriptiontext, %A_Space%D., `nD., All
+	STringReplace, grossdescriptiontext, grossdescriptiontext, %A_Space%E., `nE., All
+	STringReplace, grossdescriptiontext, grossdescriptiontext, %A_Space%F., `nF., All
+	STringReplace, grossdescriptiontext, grossdescriptiontext, %A_Space%G., `nG., All
+	STringReplace, grossdescriptiontext, grossdescriptiontext, %A_Space%H., `nH., All
+	STringReplace, grossdescriptiontext, grossdescriptiontext, %A_Space%I., `nI., All
+
+	helpText =PREFERENCES%preferences%`n`nCLINICAL INDICATIONS/HISTORY`n%ClinicalData%`n`nGROSS DESCRIPTION`n%grossdescriptiontext%
+	GuiControl, 5:Text, ClinicalHistory, %helpText%
+	Gui, 5:Show, x1289 y406 w700 h600, Case Worksheet
+
 	If (DataEntered AND UndoEnabled)
 		Gosub, F8
 	
@@ -486,7 +528,8 @@ NewCaseNum=%csbPrefix%%csbYear%-%csbCaseNum%
 		}
 	DataEntered := 0
 	Sleep, 100
-	gosub, F12
+	GuiControl, Text, CaseScanBox,  ;Blanks the data entry textbox 	
+
 	WinActivate, WinSURGE , 
 
 	Return
@@ -521,10 +564,10 @@ WinSURGECaseDataUpdater:
 	If CarisRocketWindowW < 100
 		Return
 	CarisRocketWindowH := h - 54
-	IniWrite, %CarisRocketWindowX%, %A_MyDocuments%\CarisCodeRocket.ini, Window Positions, CarisRocketWindowX
-	IniWrite, %CarisRocketWindowY%, %A_MyDocuments%\CarisCodeRocket.ini, Window Positions, CarisRocketWindowY
-	IniWrite, %CarisRocketWindowW%, %A_MyDocuments%\CarisCodeRocket.ini, Window Positions, CarisRocketWindowW
-	IniWrite, %CarisRocketWindowH%, %A_MyDocuments%\CarisCodeRocket.ini, Window Positions, CarisRocketWindowH
+	IniWrite, %CarisRocketWindowX%, %A_ScriptDir%\CarisCodeRocket.ini, Window Positions, CarisRocketWindowX
+	IniWrite, %CarisRocketWindowY%, %A_ScriptDir%\CarisCodeRocket.ini, Window Positions, CarisRocketWindowY
+	IniWrite, %CarisRocketWindowW%, %A_ScriptDir%\CarisCodeRocket.ini, Window Positions, CarisRocketWindowW
+	IniWrite, %CarisRocketWindowH%, %A_ScriptDir%\CarisCodeRocket.ini, Window Positions, CarisRocketWindowH
 	}
 
 ;Block for getting UNDO button status
@@ -925,6 +968,7 @@ F11::
 
 F12::
 {
+	Gui, 5:Hide
 	WinActivate, WinSURGE , 	
 	WinActivate, Voice -  Boomerang Enterprise Recorder
 	WinActivate, Dictation Data
@@ -941,6 +985,7 @@ return
 ^k::   ;Special Stain order
 {
 	
+	Gui, 5:Hide
 	CloseWinSURGEModalWindow("WinSURGE - Final","","&Close")
 	CloseWinSURGEModalWindow("WinSURGE - Gross Description","","&Close")
 	IfWinNotActive, WinSURGE [, &2 Open , WinActivate, WinSURGE [, &2 Open
@@ -963,7 +1008,7 @@ return
 
 	CloseWinSURGEModalWindow("WinSURGE Case Lookup","","Cancel")
 
-	;SetTimer, WinSURGECaseDataUpdater, Off
+	SetTimer, WinSURGECaseDataUpdater, Off
 
 	Progress, x10 y10 h150, Preparing to signout, Obtaining Routine Cases for signout`n Press Ctrl-Alt-R to stop the signout, Working....,
 
@@ -1033,7 +1078,7 @@ if (SignOutCount>0)
 			if (y>0)
 				{
 					ApprovalPasswordControl := x	
-					IniWrite, %ApprovalPasswordControl%, %A_MyDocuments%\CarisCodeRocket.ini, Window Positions, ApprovalPasswordControl
+					IniWrite, %ApprovalPasswordControl%, %A_ScriptDir%\CarisCodeRocket.ini, Window Positions, ApprovalPasswordControl
 				}
 			Else
 				{
@@ -1316,62 +1361,11 @@ checkForMelanoma:
 
 ^!y::
 {
-	CaseNumberProblem=0
-	InputBox, scancasenum, Scan the case...
-	
-	;Msgbox, %scancasenum%
-	StringSplit, x, scancasenum, %A_Space%
-	StringSplit, y, x1, -
-	Stringlen, csbLength, y1
-	if (csbLength<>4)
-		CaseNumberProblem=1
-	StringLeft, csbPrefix, y1, 2
-	StringRight, j, csbPrefix, 1
-	IfNotInString, letters, %j%
-		CaseNumberProblem=1
-	StringLeft, j, csbPrefix, 1
-	IfNotInString, letters, %j%
-		CaseNumberProblem=1
-	StringRight, csbYear, y1, 2
-	csbCaseNum := y2
-	StringRight, j, csbYear, 1
-	IfNotInString, numbers, %j%
-		CaseNumberProblem=1
-	StringLeft, j, csbYear, 1
-	IfNotInString, numbers, %j%
-		CaseNumberProblem=1
-	StringLen, casenumlength, csbCaseNum
-	Loop, %casenumlength%
-	{
-		StringMid, j, csbCaseNum, A_Index, 1
-		IfNotInString, numbers, %j%
-			CaseNumberProblem=1
-	}
-
-	if CaseNumberProblem
-			{
-				Msgbox, You did not enter a valid case number!
-				Gosub, F12
-				Return
-			}
-
-	NewCaseNum=%csbPrefix%%csbYear%-%csbCaseNum%
-	Msgbox, Nothing
-	x := get_filled_case_number(z1)
-	s := "select s.dx, s.gross, s.numberofspecimenparts, s.custom03, s.clin, p.name, s.clindata, pt.name, s.Computed_PATIENTAGE from specimen s, physician p, patient pt where s.patient = pt.id and s.clin=p.id and computed_numberfilled='" . x . "'"
+	s := "select s.dx, p.name, p.proficiencylog from specimen s, physician p, patient pt where s.patient = pt.id and s.clin=p.id and computed_numberfilled='OS16-016099'"
 	WinSurgeQuery(s)
-	CurrentCaseNumber := x
-	finaldiagnosistext := Result_1
-	grossdescriptiontext := Result_2
-	numberofvials := Result_3
-	OrderedCPTCodes := Result_4
-	ClientWinSurgeId := Result_5
-	ClientName := Result_6		
-	ClinicalData := Result_7
-	PatientName := Result_8
-	StringSplit, j, Result_9, .
-	PatientAge := j1
-	Msgbox, %NewCaseNum%`n%PatientName%`n%ClinicalData%`n%finaldiagnosistext%
+	Msgbox, %Result_1%
+	StringReplace, Result_3, Result_3, ***, `n, All
+	Msgbox, %Result_3%
 	Return
 }
 
@@ -1393,13 +1387,13 @@ if A_Username=mmuenster
 {
 if (ExpressSignout=0)
 	{
-	IniWrite, 1, %A_MyDocuments%\CarisCodeRocket.ini, Window Positions, ExpressSignout		
+	IniWrite, 1, %A_ScriptDir%\CarisCodeRocket.ini, Window Positions, ExpressSignout		
 	ExpressSignout := 1
 	SplashTextOn, 100,100,,Express Mode On
 	}
 Else
 	{
-	IniWrite, 0, %A_MyDocuments%\CarisCodeRocket.ini, Window Positions, ExpressSignout		
+	IniWrite, 0, %A_ScriptDir%\CarisCodeRocket.ini, Window Positions, ExpressSignout		
 	ExpressSignout := 0
 	SplashTextOn, 100,100,,Express Mode Off
 	}
@@ -1414,9 +1408,9 @@ Return
 	If (A_Username<>"mmuenster")
 		Return
 		
-	FileDelete, S:\CodeRocket\bin\EP\_ermpathExtendedPhrases.ahk
-	FileMove, S:\CodeRocket\bin\EP\DermpathExtendedPhrases.ahk, S:\CodeRocket\bin\EP\_ermpathExtendedPhrases.ahk
-	FileAppend, #NoTrayIcon`n#SingleInstance force`n#Hotstring EndChars  ``t`n#IfWinActive`, WinSURGE - `n, S:\CodeRocket\bin\EP\DermpathExtendedPhrases.ahk
+	FileDelete, %A_ScriptDir%\_ermpathExtendedPhrases.ahk
+	FileMove, %A_ScriptDir%\DermpathExtendedPhrases.ahk, %A_ScriptDir%\_ermpathExtendedPhrases.ahk
+	FileAppend, #NoTrayIcon`n#SingleInstance force`n#Hotstring EndChars  ``t`n#IfWinActive`, WinSURGE - `n, %A_ScriptDir%\DermpathExtendedPhrases.ahk
 
 	connectstring := "DRIVER={SQL Server};SERVER=s-irv-sql02;DATABASE=winsurgehotkeys;uid=wshotkeys;pwd=hotkeys10;"
 	adodb := ComObjCreate("ADODB.Connection")
@@ -1436,7 +1430,7 @@ Return
 			DxCode%j%=%y%
 			}
 			SplashTextOn, 100, 100, EP convertor, Doing %DXCodeCount%
-			FileAppend, ::%DxCode2%::%DxCode3%`n, S:\CodeRocket\bin\EP\DermpathExtendedPhrases.ahk
+			FileAppend, ::%DxCode2%::%DxCode3%`n, %A_ScriptDir%\DermpathExtendedPhrases.ahk
 			rs.MoveNext()
 	}
 	rs.close()   
@@ -1457,7 +1451,7 @@ Pause::Pause
 ^!q::Reload
 ^+!r::
 {
-	FileDelete, %A_MyDocuments%\CarisCodeRocket.ini
+	FileDelete, %A_ScriptDir%\CarisCodeRocket.ini
 	Run, C:\Documents and Settings\All Users\Desktop\Launcher - Caris CodeRocket.exe
 	ExitApp
 	Return
@@ -1466,6 +1460,7 @@ Pause::Pause
 #IfWinActive, WinSURGE - 
 Shift & Enter::
 {
+		SoundBeep
 		Send, {#}{#}
 		Sleep, 200
 		ControlGetText, x, TX321, WinSURGE - 	
@@ -1477,7 +1472,7 @@ Shift & Enter::
 		secondhalflen := totallen-y-2
 
 			TempMicros = 0	
-			;TempICD9s = 0	
+			SuppressMicros = 0	
 
 			Loop,parse, x, `n
 			{
@@ -1506,9 +1501,9 @@ Shift & Enter::
 									TempMicros = 1	
 									len := len -1
 									}
-								IfInstring, y, *
+								IfInstring, y, ?
 									{
-									;TempICD9s = 1	
+									SuppressMicros = 1	
 									len := len -1
 									}
 								StringLeft, DxCode, DxCode, len
@@ -1607,24 +1602,16 @@ Shift & Enter::
 				StringReplace, x4, x4, /-/, %cr%, All
 				perc := "%%"
 				dxtext = %x3%
-				If ((TempMicros OR UseMicros) AND !x5)
+				If (((TempMicros OR UseMicros) AND !SuppressMicros) AND !x5)
 					Msgbox, Client has requested microscopic descriptions and there is not one for this diagnostic code!  Please enter manually.
-				If (x4 or (x5 and (TempMicros OR UseMicros)))
+				If (x4 or (x5 and ((TempMicros OR UseMicros) AND !SuppressMicros)))
 					{
-					If (TempMicros OR UseMicros)
+					If ((TempMicros OR UseMicros) AND !SuppressMicros)
 						dxtext = %dxtext%`n`nComment:%A_Space%%x4%%A_Space%%A_Space%%x5%
 					Else
 						dxtext = %dxtext%`n`nComment:%A_Space%%x4%
 					}
 				
-				;if (TempICD9s OR UseICD9s)
-					;{
-					;if SelICD9	
-						;dxtext = %dxtext% (%SelICD9%)
-					;Else
-						;dxtext = %dxtext% (***)
-					;}
-
 				dxtext = %dxtext%`n
 				If x6
 					{
@@ -1639,13 +1626,14 @@ Shift & Enter::
 		StringRight, secondhalf, finaldxcontents, %secondhalflen%
 		newtext =%firsthalf%%dxtext%%secondhalf%
 		
+		BlockInput, On
 		if UseSendMethod
 			{
 			Send, %dxtext%	
-			Sleep, 50
-			Send, {Shift Down}   ;these lines are to correct the but where the shift key is locked down after a send.
-			Sleep, 50
-			Send, {Shift Up}
+			;Sleep, 50
+			;Send, {Shift Down}   ;these lines are to correct the but where the shift key is locked down after a send.
+			;Sleep, 50
+			;Send, {Shift Up}
 			}
 		Else
 			ControlSetText, TX321, %newtext%, WinSURGE -  
@@ -1669,10 +1657,10 @@ Shift & Enter::
 			StringGetPos, i, finaldiag, ***
 			if i>0
 				ActivateNextTripleAsterisk()
-			Else if OpMode<>M
+			Else 
 				Gosub, F12
 			}
-
+BlockInput, Off
 Return
 }
 

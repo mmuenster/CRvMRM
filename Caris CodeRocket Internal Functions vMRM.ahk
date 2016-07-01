@@ -43,13 +43,6 @@ CalculateWindowSizes()
 	WinSURGEModalWindowH := 500
 	}
 
-
-/*	IniRead, ProgressBoxX, %A_MyDocuments%\CarisRocket\CarisRocket.ini, WinSurge, ProgressBoxX 
-	IniRead, ProgressBoxY, %A_MyDocuments%\CarisRocket\CarisRocket.ini, WinSurge, ProgressBoxY 
-	IniRead, ProgressBoxW, %A_MyDocuments%\CarisRocket\CarisRocket.ini, WinSurge, ProgressBoxW 
-	IniRead, ProgressBoxH, %A_MyDocuments%\CarisRocket\CarisRocket.ini, WinSurge, ProgressBoxH
-*/
-
 	Return
 	}
 	
@@ -444,8 +437,8 @@ FirstTimeSetup()
 		if !Result_1
 			{
 				OpMode = T
-				IniWrite, %A_Username%, %A_MyDocuments%\CarisCodeRocket.ini, Window Positions, WindowsLoginId
-				IniWrite, %OpMode%, %A_MyDocuments%\CarisCodeRocket.ini, Window Positions, OpMode
+				IniWrite, %A_Username%, %A_ScriptDir%\CarisCodeRocket.ini, Window Positions, WindowsLoginId
+				IniWrite, %OpMode%, %A_ScriptDir%\CarisCodeRocket.ini, Window Positions, OpMode
 				Return
 			}
 			
@@ -489,25 +482,25 @@ FirstTimeSetup()
 			{
 				Msgbox, Your location could not be determined.  Please email Matt Muenster with the following information:`nA_UserName=%A_UserName%`nA_ComputerName=%A_ComputerName%`nA_IPAddress1=%A_IPAddress1%`n`nSetup will continue...
 			}
-	IniWrite, %A_Username%, %A_MyDocuments%\CarisCodeRocket.ini, Window Positions, WindowsLoginId
-	IniWrite, %WinSurgeSignoutPassword%, %A_MyDocuments%\CarisCodeRocket.ini, Window Positions, WinSurgeSignoutPassword
-	IniWrite, %WinSurgeLoginPassword%, %A_MyDocuments%\CarisCodeRocket.ini, Window Positions, WinSurgeLoginPassword
-	IniWrite, %WinSurgeFullName%, %A_MyDocuments%\CarisCodeRocket.ini, Window Positions, WinSurgeFullName
-	IniWrite, %OpMode%, %A_MyDocuments%\CarisCodeRocket.ini, Window Positions, OpMode
-	IniWrite, %SecurityUserId%, %A_MyDocuments%\CarisCodeRocket.ini, Window Positions, SecurityUserId
-	IniWrite, %WinSURGEPathologistID%, %A_MyDocuments%\CarisCodeRocket.ini, Window Positions, WinSURGEPathologistID
-	IniWrite, %HomeLabCasePrefix%, %A_MyDocuments%\CarisCodeRocket.ini, Window Positions, HomeLabCasePrefix
-	IniWrite, %HomeLabGrossAddendum%, %A_MyDocuments%\CarisCodeRocket.ini, Window Positions, HomeLabGrossAddendum
-	IniWrite, %CarisRocketWindowX%, %A_MyDocuments%\CarisCodeRocket.ini, Window Positions, CarisRocketWindowX
-	IniWrite, %CarisRocketWindowY%, %A_MyDocuments%\CarisCodeRocket.ini, Window Positions, CarisRocketWindowY
-	IniWrite, %CarisRocketWindowW%, %A_MyDocuments%\CarisCodeRocket.ini, Window Positions, CarisRocketWindowW
-	IniWrite, %CarisRocketWindowH%, %A_MyDocuments%\CarisCodeRocket.ini, Window Positions, CarisRocketWindowH
+	IniWrite, %A_Username%, %A_ScriptDir%\CarisCodeRocket.ini, Window Positions, WindowsLoginId
+	IniWrite, %WinSurgeSignoutPassword%, %A_ScriptDir%\CarisCodeRocket.ini, Window Positions, WinSurgeSignoutPassword
+	IniWrite, %WinSurgeLoginPassword%, %A_ScriptDir%\CarisCodeRocket.ini, Window Positions, WinSurgeLoginPassword
+	IniWrite, %WinSurgeFullName%, %A_ScriptDir%\CarisCodeRocket.ini, Window Positions, WinSurgeFullName
+	IniWrite, %OpMode%, %A_ScriptDir%\CarisCodeRocket.ini, Window Positions, OpMode
+	IniWrite, %SecurityUserId%, %A_ScriptDir%\CarisCodeRocket.ini, Window Positions, SecurityUserId
+	IniWrite, %WinSURGEPathologistID%, %A_ScriptDir%\CarisCodeRocket.ini, Window Positions, WinSURGEPathologistID
+	IniWrite, %HomeLabCasePrefix%, %A_ScriptDir%\CarisCodeRocket.ini, Window Positions, HomeLabCasePrefix
+	IniWrite, %HomeLabGrossAddendum%, %A_ScriptDir%\CarisCodeRocket.ini, Window Positions, HomeLabGrossAddendum
+	IniWrite, %CarisRocketWindowX%, %A_ScriptDir%\CarisCodeRocket.ini, Window Positions, CarisRocketWindowX
+	IniWrite, %CarisRocketWindowY%, %A_ScriptDir%\CarisCodeRocket.ini, Window Positions, CarisRocketWindowY
+	IniWrite, %CarisRocketWindowW%, %A_ScriptDir%\CarisCodeRocket.ini, Window Positions, CarisRocketWindowW
+	IniWrite, %CarisRocketWindowH%, %A_ScriptDir%\CarisCodeRocket.ini, Window Positions, CarisRocketWindowH
 
 	Msgbox, 4, Setup..., Caris CodeRocket is installed but is not setup for "automated" modes on your machine.  You must go through setup to use the automated modes or you can skip setup and use in manual mode.  Continue to setup for automation? 
 	ifMsgbox, No
 		{
 			OpMode=M
-			IniWrite, %OpMode%, %A_MyDocuments%\CarisCodeRocket.ini, Window Positions, OpMode			
+			IniWrite, %OpMode%, %A_ScriptDir%\CarisCodeRocket.ini, Window Positions, OpMode			
 			Return
 		}
 		
@@ -526,7 +519,7 @@ qiblabel:
 	if (y>0)
 		{
 			QueueIntoBatchBox := x	
-			IniWrite, %QueueIntoBatchBox%, %A_MyDocuments%\CarisCodeRocket.ini, Window Positions, QueueIntoBatchBox
+			IniWrite, %QueueIntoBatchBox%, %A_ScriptDir%\CarisCodeRocket.ini, Window Positions, QueueIntoBatchBox
 		}
 	Else
 		{
@@ -548,7 +541,7 @@ p1label:
 	if (y>0)
 		{
 			Photo1TextBox := x	
-			IniWrite, %Photo1TextBox%, %A_MyDocuments%\CarisCodeRocket.ini, Window Positions, Photo1TextBox
+			IniWrite, %Photo1TextBox%, %A_ScriptDir%\CarisCodeRocket.ini, Window Positions, Photo1TextBox
 		}
 	Else
 		{
@@ -570,7 +563,7 @@ p2label:
 	if (y>0)
 		{
 			Photo2TextBox := x	
-			IniWrite, %Photo2TextBox%, %A_MyDocuments%\CarisCodeRocket.ini, Window Positions, Photo2TextBox
+			IniWrite, %Photo2TextBox%, %A_ScriptDir%\CarisCodeRocket.ini, Window Positions, Photo2TextBox
 		}
 	Else
 		{
@@ -588,7 +581,7 @@ pathlabel:
 	if (y>0)
 		{
 			PathologistTextBox := x	
-			IniWrite, %PathologistTextBox%, %A_MyDocuments%\CarisCodeRocket.ini, Window Positions, PathologistTextBox
+			IniWrite, %PathologistTextBox%, %A_ScriptDir%\CarisCodeRocket.ini, Window Positions, PathologistTextBox
 		}
 	Else
 		{
@@ -603,8 +596,8 @@ finaldxlabel:
 	MouseGetPos, xpos, ypos	
 	FinalDiagnosisButtonX := xpos
 	FinalDiagnosisButtonY := ypos
-	IniWrite, %FinalDiagnosisButtonX%, %A_MyDocuments%\CarisCodeRocket.ini, Window Positions, FinalDiagnosisButtonX
-	IniWrite, %FinalDiagnosisButtonY%, %A_MyDocuments%\CarisCodeRocket.ini, Window Positions, FinalDiagnosisButtonY
+	IniWrite, %FinalDiagnosisButtonX%, %A_ScriptDir%\CarisCodeRocket.ini, Window Positions, FinalDiagnosisButtonX
+	IniWrite, %FinalDiagnosisButtonY%, %A_ScriptDir%\CarisCodeRocket.ini, Window Positions, FinalDiagnosisButtonY
 
 grossdesclabel:
 	SplashTextOn, 200,100, Setup..., Hover your mouse over the "Gross Description" button BUT DONT CLICK IT!  Then press F3.
@@ -613,8 +606,8 @@ grossdesclabel:
 	MouseGetPos, xpos, ypos	
 	GrossDescriptionButtonX := xpos
 	GrossDescriptionButtonY := ypos
-	IniWrite, %GrossDescriptionButtonX%, %A_MyDocuments%\CarisCodeRocket.ini, Window Positions, GrossDescriptionButtonX
-	IniWrite, %GrossDescriptionButtonY%, %A_MyDocuments%\CarisCodeRocket.ini, Window Positions, GrossDescriptionButtonY
+	IniWrite, %GrossDescriptionButtonX%, %A_ScriptDir%\CarisCodeRocket.ini, Window Positions, GrossDescriptionButtonX
+	IniWrite, %GrossDescriptionButtonY%, %A_ScriptDir%\CarisCodeRocket.ini, Window Positions, GrossDescriptionButtonY
 	
 	
 	SplashTextOn, 200, 100, Setup Complete!
@@ -627,38 +620,38 @@ ReadIniValues()
 {
 	global
 
-	IniRead, WindowsLoginId, %A_MyDocuments%\CarisCodeRocket.ini, Window Positions, WindowsLoginId
-	IniRead, OpMode, %A_MyDocuments%\CarisCodeRocket.ini, Window Positions, OpMode
-	IniRead, WinSurgeSignoutPassword, %A_MyDocuments%\CarisCodeRocket.ini, Window Positions, WinSurgeSignoutPassword
-	IniRead, WinSurgeLoginPassword, %A_MyDocuments%\CarisCodeRocket.ini, Window Positions, WinSurgeLoginPassword
-	IniRead, WinSurgeFullName, %A_MyDocuments%\CarisCodeRocket.ini, Window Positions, WinSurgeFullName
-	IniRead, HomeLabCasePrefix, %A_MyDocuments%\CarisCodeRocket.ini, Window Positions, HomeLabCasePrefix
-	IniRead, HomeLabGrossAddendum, %A_MyDocuments%\CarisCodeRocket.ini, Window Positions, HomeLabGrossAddendum
-	IniRead, WinSURGEPathologistID, %A_MyDocuments%\CarisCodeRocket.ini, Window Positions, WinSURGEPathologistID
-	IniRead, SecurityUserId, %A_MyDocuments%\CarisCodeRocket.ini, Window Positions, SecurityUserId
+	IniRead, WindowsLoginId, %A_ScriptDir%\CarisCodeRocket.ini, Window Positions, WindowsLoginId
+	IniRead, OpMode, %A_ScriptDir%\CarisCodeRocket.ini, Window Positions, OpMode
+	IniRead, WinSurgeSignoutPassword, %A_ScriptDir%\CarisCodeRocket.ini, Window Positions, WinSurgeSignoutPassword
+	IniRead, WinSurgeLoginPassword, %A_ScriptDir%\CarisCodeRocket.ini, Window Positions, WinSurgeLoginPassword
+	IniRead, WinSurgeFullName, %A_ScriptDir%\CarisCodeRocket.ini, Window Positions, WinSurgeFullName
+	IniRead, HomeLabCasePrefix, %A_ScriptDir%\CarisCodeRocket.ini, Window Positions, HomeLabCasePrefix
+	IniRead, HomeLabGrossAddendum, %A_ScriptDir%\CarisCodeRocket.ini, Window Positions, HomeLabGrossAddendum
+	IniRead, WinSURGEPathologistID, %A_ScriptDir%\CarisCodeRocket.ini, Window Positions, WinSURGEPathologistID
+	IniRead, SecurityUserId, %A_ScriptDir%\CarisCodeRocket.ini, Window Positions, SecurityUserId
 
-	IniRead, QueueIntoBatchBox, %A_MyDocuments%\CarisCodeRocket.ini, Window Positions, QueueIntoBatchBox 	
-	IniRead, Photo1TextBox, %A_MyDocuments%\CarisCodeRocket.ini, Window Positions, Photo1TextBox 	
-	IniRead, Photo2TextBox, %A_MyDocuments%\CarisCodeRocket.ini, Window Positions, Photo2TextBox 	
-	IniRead, PathologistTextBox, %A_MyDocuments%\CarisCodeRocket.ini, Window Positions, PathologistTextBox 	
-	IniRead, FinalDiagnosisButtonX, %A_MyDocuments%\CarisCodeRocket.ini, Window Positions, FinalDiagnosisButtonX
-	IniRead, FinalDiagnosisButtonY, %A_MyDocuments%\CarisCodeRocket.ini, Window Positions, FinalDiagnosisButtonY 	
-	IniRead, GrossDescriptionButtonX, %A_MyDocuments%\CarisCodeRocket.ini, Window Positions, GrossDescriptionButtonX 	
-	IniRead, GrossDescriptionButtonY, %A_MyDocuments%\CarisCodeRocket.ini, Window Positions, GrossDescriptionButtonY 	
-	IniRead, DictationSendX, %A_MyDocuments%\CarisCodeRocket.ini, Window Positions, DictationSendX 	
-	IniRead, DictationSendY, %A_MyDocuments%\CarisCodeRocket.ini, Window Positions, DictationSendY 	
+	IniRead, QueueIntoBatchBox, %A_ScriptDir%\CarisCodeRocket.ini, Window Positions, QueueIntoBatchBox 	
+	IniRead, Photo1TextBox, %A_ScriptDir%\CarisCodeRocket.ini, Window Positions, Photo1TextBox 	
+	IniRead, Photo2TextBox, %A_ScriptDir%\CarisCodeRocket.ini, Window Positions, Photo2TextBox 	
+	IniRead, PathologistTextBox, %A_ScriptDir%\CarisCodeRocket.ini, Window Positions, PathologistTextBox 	
+	IniRead, FinalDiagnosisButtonX, %A_ScriptDir%\CarisCodeRocket.ini, Window Positions, FinalDiagnosisButtonX
+	IniRead, FinalDiagnosisButtonY, %A_ScriptDir%\CarisCodeRocket.ini, Window Positions, FinalDiagnosisButtonY 	
+	IniRead, GrossDescriptionButtonX, %A_ScriptDir%\CarisCodeRocket.ini, Window Positions, GrossDescriptionButtonX 	
+	IniRead, GrossDescriptionButtonY, %A_ScriptDir%\CarisCodeRocket.ini, Window Positions, GrossDescriptionButtonY 	
+	IniRead, DictationSendX, %A_ScriptDir%\CarisCodeRocket.ini, Window Positions, DictationSendX 	
+	IniRead, DictationSendY, %A_ScriptDir%\CarisCodeRocket.ini, Window Positions, DictationSendY 	
 
-	IniRead, CarisRocketWindowX, %A_MyDocuments%\CarisCodeRocket.ini, Window Positions, CarisRocketWindowX 	
-	IniRead, CarisRocketWindowY, %A_MyDocuments%\CarisCodeRocket.ini, Window Positions, CarisRocketWindowY 
-	IniRead, CarisRocketWindowW, %A_MyDocuments%\CarisCodeRocket.ini, Window Positions, CarisRocketWindowW 
-	IniRead, CarisRocketWindowH, %A_MyDocuments%\CarisCodeRocket.ini, Window Positions, CarisRocketWindowH
+	IniRead, CarisRocketWindowX, %A_ScriptDir%\CarisCodeRocket.ini, Window Positions, CarisRocketWindowX 	
+	IniRead, CarisRocketWindowY, %A_ScriptDir%\CarisCodeRocket.ini, Window Positions, CarisRocketWindowY 
+	IniRead, CarisRocketWindowW, %A_ScriptDir%\CarisCodeRocket.ini, Window Positions, CarisRocketWindowW 
+	IniRead, CarisRocketWindowH, %A_ScriptDir%\CarisCodeRocket.ini, Window Positions, CarisRocketWindowH
 
-	IniRead, EsignoutTextBox, %A_MyDocuments%\CarisCodeRocket.ini, Window Positions, EsignoutTextBox
-	IniRead, ApprovalPasswordControl, %A_MyDocuments%\CarisCodeRocket.ini, Window Positions, ApprovalPasswordControl 
+	IniRead, EsignoutTextBox, %A_ScriptDir%\CarisCodeRocket.ini, Window Positions, EsignoutTextBox
+	IniRead, ApprovalPasswordControl, %A_ScriptDir%\CarisCodeRocket.ini, Window Positions, ApprovalPasswordControl 
 
-	IniRead, ExpressSignout, %A_MyDocuments%\CarisCodeRocket.ini, Window Positions, ExpressSignout
-	IniRead, SpeakEnabled, %A_MyDocuments%\CarisCodeRocket.ini, Window Positions, SpeakEnabled
-	IniRead, UseSendMethod, %A_MyDocuments%\CarisCodeRocket.ini, Window Positions, UseSendMethod
+	IniRead, ExpressSignout, %A_ScriptDir%\CarisCodeRocket.ini, Window Positions, ExpressSignout
+	IniRead, SpeakEnabled, %A_ScriptDir%\CarisCodeRocket.ini, Window Positions, SpeakEnabled
+	IniRead, UseSendMethod, %A_ScriptDir%\CarisCodeRocket.ini, Window Positions, UseSendMethod
 
 Return
 }
