@@ -95,7 +95,7 @@ Gui, 4:Add, DropDownList, AltSubmit vEmailType w500, Patient Double Blind Error|
 GuiControl, 4:Choose, EmailType, 1
 Gui, 4:Add, Text, ,Comments
 Gui, 4:Add, Edit, vEmailComments w500, 
-Gui, 4:Add, Button, gSendEmail vSendEmail, Send Email
+Gui, 4:Add, Button, Default gSendEmail vSendEmail, Send Email
 
 
 Progress, 0 x400 y1 h130, Preparing for first time use..., Written by Matthew Muenster M.D.`n`nInitializing..., Caris CodeRocket 
@@ -988,6 +988,7 @@ return
 	Gui, 5:Hide
 	CloseWinSURGEModalWindow("WinSURGE - Final","","&Close")
 	CloseWinSURGEModalWindow("WinSURGE - Gross Description","","&Close")
+	CloseWinSURGEModalWindow("WinSURGE Case Lookup","","&Close")
 	IfWinNotActive, WinSURGE [, &2 Open , WinActivate, WinSURGE [, &2 Open
 	WinWaitActive, WinSURGE [, &2 Open
 	Sleep, 400
@@ -1138,7 +1139,12 @@ Return
 
 ^!e::
 {
-GuiControl, 4:Text, DisplayCaseNumber, Case Number: %CurrentCaseNumber%
+
+WinGetTitle, x, WinSURGE, Approve
+StringReplace, x, x, Case, |, All
+StringSplit, y, x, |, %A_Space%
+StringSplit, z, y2, %A_Space%, %A_space%
+GuiControl, 4:Text, DisplayCaseNumber, Case Number: %z1%
 Gui, 4:Show
 GuiControl, 4:Focus, EmailType
 return
