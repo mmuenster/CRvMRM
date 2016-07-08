@@ -410,7 +410,12 @@ ButtonOK:
 			Return
 		}
 	CaseNumberProblem=0
-	StringSplit, x, CaseScanBox, %A_Space%
+	StringGetPos, pos, CaseScanBox, -
+	pos := pos-3
+	len := StrLen(CaseScanBox)
+	cou := len - pos
+	StringMid, trimmedCSB, CaseScanBox, %pos%, %cou%
+	StringSplit, x, trimmedCSB, %A_Space%
 	StringSplit, y, x1, -
 	Stringlen, csbLength, y1
 	if (csbLength<>4)
@@ -1210,7 +1215,7 @@ SendEmail:
 	else if (EmailType=4)
 		{
 		SetTitleMatchMode, 2
-		Run, "%OutlookPath%" /c ipm.note  /m %Email4%&subject=Critical`%20Result`%20Call`%20%ccn%&body=Please`%20fax`%20and`%20call`%20confirm`%20only!
+		Run, "%OutlookPath%" /c ipm.note  /m %Email4%&subject=Critical`%20Result`%20Call`%20%ccn%(%EmailComments%)&body=Please`%20fax`%20and`%20call`%20confirm`%20only!
 		WinWaitActive, (HTML)
 		SetTitleMatchMode, 1
 		Send, !s

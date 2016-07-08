@@ -19,7 +19,6 @@ Some guidelines.
 */
 #IfWinActive, WinSURGE -      ;Codes in this section will only work when in a 'WinSURGE' window.
 ::mattm::Matt Muenster's personal code.
-::protrude1::Matt's protrude code.  This code will be ignored as there is already a protrude1 code in the master group.
 ::multilinecode1::This is line 1.  `nThis is line 2.`nThis is line 3.
 ::ppic::
 (

@@ -461,22 +461,22 @@ FirstTimeSetup()
 		IfInString, A_ComputerName, DFW
 			{
 			HomeLabCasePrefix =D
-			HomeLabGrossAddendum = This case was interpreted at Caris Diagnostics, 6655 North MacArthur Blvd, Irving, Texas 75039.  CLIA #45D0975010.
+			HomeLabGrossAddendum = This case was interpreted at Miraca Life Sciences, 6655 North MacArthur Blvd, Irving, Texas 75039.  CLIA #45D0975010.
 		}
 		Else IfInString, A_ComputerName, PHX
 			{
 			HomeLabCasePrefix =P
-			HomeLabGrossAddendum = This case was interpreted at Caris Life Sciences. 4207 Cotton Ctr. Blvd., Bldg. 10, Phoenix, AZ 85040-8893.  CLIA#03D1064744
+			HomeLabGrossAddendum = This case was interpreted at Miraca Life Sciences. 4207 Cotton Ctr. Blvd., Bldg. 10, Phoenix, AZ 85040-8893.  CLIA#03D1064744
 		}
 		Else IfInString, A_ComputerName, BOS
 			{
 			HomeLabCasePrefix =C
-			HomeLabGrossAddendum = This case was interpreted at Caris Life Sciences, 320 Needham Street, Suite 200, Newton, MA  02464.  CLIA #22D957540.
+			HomeLabGrossAddendum = This case was interpreted at Miraca Life Sciences, 320 Needham Street, Suite 200, Newton, MA  02464.  CLIA #22D957540.
 		}
 		Else IfInString, A_ComputerName, MAR
 			{
 			HomeLabCasePrefix =M
-			HomeLabGrossAddendum = This case was interpreted at 810 Landmark Drive, Suite 217-219, Glen Burnie, MD  21061.  Pathologists: 410.766.4175. Client Services: 617.969.4100  CLIA #21D1077515.
+			HomeLabGrossAddendum = This case was interpreted at Miraca Life Sciences, 810 Landmark Drive, Suite 217-219, Glen Burnie, MD  21061.  Pathologists: 410.766.4175. Client Services: 617.969.4100  CLIA #21D1077515.
 		}
 		Else
 			{
